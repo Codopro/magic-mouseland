@@ -68,13 +68,13 @@
       border-radius: 32px;
       box-shadow: 0 20px 40px rgba(0,0,0,0.08), inset 0 4px 0 rgba(255,255,255,0.6);
       position: absolute;
-      left: 50%;
-      top: 50%;
+      left: 0;
+      top: 0;
       overflow: hidden;
       display: flex;
       flex-direction: column;
-      transform-origin: center center;
-      transform: translate(-50%, -50%) scale(1);
+      transform-origin: top left;
+      transform: scale(1);
     }
 
     /* ==========================================================================
@@ -2181,7 +2181,18 @@
       // PC大画面での過剰な拡大（ぼやけ）を防ぐため、最大スケールは 1 とする
       const finalScale = Math.min(scale, 1);
       
-      app.style.transform = `translate(-50%, -50%) scale(${finalScale})`;
+      // 縮小後の実サイズを計算
+      const scaledWidth = baseWidth * finalScale;
+      const scaledHeight = baseHeight * finalScale;
+      
+      // 画面の中央に配置するための left, top を計算
+      const left = (windowWidth - scaledWidth) / 2;
+      const top = (windowHeight - scaledHeight) / 2;
+      
+      // スタイルを反映 (はみ出しによる左見切れバグを防ぐため、left/topをJSで動的配置)
+      app.style.transform = `scale(${finalScale})`;
+      app.style.left = `${left}px`;
+      app.style.top = `${top}px`;
     }
 
     window.addEventListener('resize', handleResize);
