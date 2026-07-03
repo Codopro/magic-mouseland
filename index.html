@@ -155,6 +155,7 @@
       display: flex;
       align-items: center;
       gap: 10px;
+      white-space: nowrap;
     }
 
     .screen {
@@ -306,10 +307,10 @@
       margin-top: 0px;
     }
 
-    /* 2列のGridレイアウト */
+    /* 3列のGridレイアウトに変更 */
     .menu-cards {
       display: grid;
-      grid-template-columns: repeat(2, 1fr);
+      grid-template-columns: repeat(3, 1fr);
       gap: 15px;
       width: 100%;
       max-width: 900px;
@@ -320,7 +321,7 @@
       background: var(--color-white);
       border: 6px solid var(--card-border, var(--color-primary));
       border-radius: 28px;
-      padding: 15px;
+      padding: 15px 10px;
       text-align: center;
       cursor: pointer;
       transition: all 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275);
@@ -328,7 +329,7 @@
       position: relative;
       top: 0;
       width: 100%;
-      height: 155px;
+      height: 185px;
       display: flex;
       flex-direction: column;
       justify-content: center;
@@ -345,7 +346,7 @@
 
     /* 「①クリック」を上段横幅いっぱいに超巨大化 */
     .menu-card.click-practice {
-      grid-column: span 2;
+      grid-column: span 3;
       height: 155px;
       flex-direction: row;
       justify-content: flex-start;
@@ -903,6 +904,204 @@
       from { transform: translateX(-200px); }
       to { transform: translateX(1100px); }
     }
+
+    .menu-card.block-practice {
+      --card-border: var(--color-accent);
+      --card-shadow: #f59f00;
+    }
+
+    /* ==========================================================================
+       SCREEN: BLOCK PRACTICE
+       ========================================================================== */
+    #block-game-area {
+      flex: 1;
+      display: flex;
+      position: relative;
+      overflow: hidden;
+    }
+    .block-palette {
+      width: 280px;
+      background: rgba(255, 255, 255, 0.45);
+      border-right: 4px dashed rgba(255, 255, 255, 0.6);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 20px 10px;
+      box-shadow: 5px 0 15px rgba(0, 0, 0, 0.02);
+      z-index: 5;
+    }
+    .palette-title {
+      font-size: 1.3rem;
+      font-weight: 800;
+      color: var(--color-text);
+      margin-bottom: 20px;
+      background: var(--color-white);
+      padding: 6px 20px;
+      border-radius: 50px;
+      border: 3px solid var(--color-secondary);
+      box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+    }
+    .palette-container {
+      flex: 1;
+      width: 100%;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 30px;
+      position: relative;
+    }
+    .block-workspace {
+      flex: 1;
+      position: relative;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: rgba(255, 255, 255, 0.15);
+    }
+    .forever-block {
+      position: absolute;
+      width: 220px;
+      height: 165px;
+      filter: drop-shadow(0 8px 16px rgba(0,0,0,0.1));
+      transition: transform 0.2s ease;
+    }
+    .forever-block.hovered {
+      transform: scale(1.05);
+      filter: drop-shadow(0 12px 24px rgba(255, 171, 25, 0.4));
+    }
+    #forever-block-target-1.highlight-active .guide-path {
+      animation: guidePulseYellow 1.0s infinite ease-in-out;
+    }
+    #forever-block-target-2.highlight-active .guide-path {
+      animation: guidePulseOrange 1.0s infinite ease-in-out;
+    }
+    #forever-block-target-3.highlight-active .guide-path {
+      animation: guidePulseGreen 1.0s infinite ease-in-out;
+    }
+    @keyframes guidePulseYellow {
+      0% { opacity: 0.4; stroke-width: 3px; fill: rgba(255, 230, 0, 0.05); }
+      50% { opacity: 1.0; stroke-width: 5.5px; fill: rgba(255, 230, 0, 0.25); }
+      100% { opacity: 0.4; stroke-width: 3px; fill: rgba(255, 230, 0, 0.05); }
+    }
+    @keyframes guidePulseOrange {
+      0% { opacity: 0.4; stroke-width: 3px; fill: rgba(255, 119, 0, 0.05); }
+      50% { opacity: 1.0; stroke-width: 5.5px; fill: rgba(255, 119, 0, 0.25); }
+      100% { opacity: 0.4; stroke-width: 3px; fill: rgba(255, 119, 0, 0.05); }
+    }
+    @keyframes guidePulseGreen {
+      0% { opacity: 0.4; stroke-width: 3px; stroke: #33cc33; fill: rgba(255, 255, 255, 0.1); }
+      50% { opacity: 1.0; stroke-width: 5.5px; stroke: #99ff99; fill: rgba(255, 255, 255, 0.55); }
+      100% { opacity: 0.4; stroke-width: 3px; stroke: #33cc33; fill: rgba(255, 255, 255, 0.1); }
+    }
+    .forever-block.bounce {
+      animation: basketBounce 0.5s ease;
+    }
+    .drag-block {
+      position: absolute;
+      width: 170px;
+      height: 70px;
+      cursor: grab;
+      filter: drop-shadow(0 6px 12px rgba(0,0,0,0.15));
+      touch-action: none;
+      z-index: 100;
+    }
+    .drag-block:active {
+      cursor: grabbing;
+      filter: drop-shadow(0 15px 24px rgba(0,0,0,0.22));
+    }
+    /* ズームコントロールボタン */
+    .zoom-controls {
+      position: absolute;
+      bottom: 25px;
+      right: 25px;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      z-index: 200;
+    }
+    .zoom-btn {
+      width: 60px;
+      height: 60px;
+      border-radius: 50%;
+      background: #ffffff;
+      border: 3.5px solid #dcdcdc;
+      color: #495057;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      cursor: pointer;
+      box-shadow: 0 5px 0 #c0c0c0, 0 8px 16px rgba(0,0,0,0.06);
+      transition: all 0.1s ease;
+      outline: none;
+    }
+    .zoom-btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 7px 0 #c0c0c0, 0 10px 20px rgba(0,0,0,0.08);
+    }
+    .zoom-btn:active {
+      transform: translateY(4px);
+      box-shadow: 0 1px 0 #c0c0c0;
+    }
+    /* レベル1用ズーム可能な静的ハットブロック */
+    .zoomable-block {
+      filter: drop-shadow(0 6px 12px rgba(0,0,0,0.15));
+      position: absolute;
+    }
+    /* レベル3ゴミ箱パレットハイライト */
+    .block-palette.palette-trash-active {
+      border: 4px dashed #fa5252 !important;
+      background-color: rgba(250, 82, 82, 0.08) !important;
+      animation: trashPulse 1.0s infinite ease-in-out;
+    }
+    @keyframes trashPulse {
+      0% { opacity: 0.85; }
+      50% { opacity: 1.0; background-color: rgba(250, 82, 82, 0.15); }
+      100% { opacity: 0.85; }
+    }
+    /* レベル3ブロック消去フェードアウト */
+    .drag-block.block-fade-out {
+      transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94) !important;
+      transform: scale(0.1) rotate(20deg) !important;
+      opacity: 0 !important;
+      pointer-events: none;
+    }
+    /* 常にハイライトされるズームインボタン */
+    .zoom-btn-highlight {
+      border-color: #ffe600 !important;
+      background: #fff9db !important;
+      box-shadow: 0 0 15px rgba(255, 230, 0, 0.8), 0 5px 0 #ffd43b !important;
+      animation: zoomInPulse 1.2s infinite ease-in-out;
+    }
+    @keyframes zoomInPulse {
+      0%, 100% {
+        transform: translateY(0) scale(1.0);
+        box-shadow: 0 0 15px rgba(255, 230, 0, 0.8), 0 5px 0 #ffd43b !important;
+      }
+      50% {
+        transform: translateY(-4px) scale(1.08);
+        box-shadow: 0 0 25px rgba(255, 230, 0, 1.0), 0 7px 0 #ffd43b !important;
+      }
+    }
+    /* ドラッグガイド矢印のアニメーション */
+    .drag-guide-arrow {
+      animation: dashOffset 1.2s linear infinite;
+    }
+    @keyframes dashOffset {
+      to {
+        stroke-dashoffset: 28;
+      }
+    }
+    /* レベル3ゴミ箱パレットヒントハイライト */
+    .block-palette.palette-trash-hint {
+      border: 4px dashed #ff8787 !important;
+      background-color: rgba(250, 82, 82, 0.05) !important;
+      animation: trashHintPulse 1.5s infinite ease-in-out;
+    }
+    @keyframes trashHintPulse {
+      0%, 100% { opacity: 0.7; }
+      50% { opacity: 1.0; background-color: rgba(250, 82, 82, 0.1) !important; }
+    }
   </style>
 </head>
 <body>
@@ -991,6 +1190,48 @@
           <h3 class="card-title">③ ドラッグ</h3>
           <p class="card-desc">くだものを カゴまで ひっぱっていこう！</p>
         </div>
+
+        <!-- カード④：ブロック -->
+        <div class="menu-card block-practice" onclick="startBlockGame(1)">
+          <div class="card-icon">
+            <svg width="60" height="60" viewBox="0 0 64 64">
+              <!-- 上ブロック (青) -->
+              <path d="M 14 12 
+                       L 22 12 
+                       Q 26 16, 30 12 
+                       L 50 12 
+                       A 4 4 0 0 1 54 16 
+                       L 54 26 
+                       A 4 4 0 0 1 50 30 
+                       L 30 30 
+                       Q 26 34, 22 30 
+                       L 14 30 
+                       A 4 4 0 0 1 10 26 
+                       L 10 16 
+                       A 4 4 0 0 1 14 12 
+                       Z" 
+                    fill="#4c97ff" stroke="#3373cc" stroke-width="3"/>
+              <!-- 下ブロック (オレンジ) -->
+              <path d="M 14 32 
+                       L 22 32 
+                       Q 26 36, 30 32 
+                       L 50 32 
+                       A 4 4 0 0 1 54 36 
+                       L 54 46 
+                       A 4 4 0 0 1 50 50 
+                       L 30 50 
+                       Q 26 54, 22 50 
+                       L 14 50 
+                       A 4 4 0 0 1 10 46 
+                       L 10 36 
+                       A 4 4 0 0 1 14 32 
+                       Z" 
+                    fill="#ffab19" stroke="#cf8b17" stroke-width="3"/>
+            </svg>
+          </div>
+          <h3 class="card-title">④ ブロック</h3>
+          <p class="card-desc">ブロックを つなげる れんしゅうを しよう！</p>
+        </div>
       </div>
     </div>
 
@@ -1025,6 +1266,43 @@
           <button class="btn level-btn level-btn-3" onclick="startGame('click', 3)">
             <span class="level-num">レベル 3</span>
             <span class="level-name">ふわふわ のぼる (むずかしい)</span>
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- ==========================================================================
+         SCREEN: BLOCK LEVEL SELECT
+         ========================================================================== -->
+    <div id="screen-block-level" class="screen">
+      <div class="game-header">
+        <button class="btn btn-back" onclick="backToMenu()">◀ メニュー</button>
+        <div class="game-title-text">ブロックの レベルえらび</div>
+        <div style="width: 140px;"></div>
+      </div>
+      <div class="level-select-container">
+        <div class="level-intro">
+          <img src="image/mau_kun.png" alt="マウくん" width="70" height="70" style="object-fit: contain; filter: drop-shadow(2px 4px 6px rgba(0,0,0,0.05));">
+          <div class="mascot-bubble">
+            どの レベルで あそぶ？<br>すきなものを ひとつ えらんでね！
+          </div>
+        </div>
+        
+        <div class="level-buttons">
+          <!-- レベル1：拡大・縮小 -->
+          <button class="btn level-btn level-btn-1" onclick="startBlockGame(1)">
+            <span class="level-num">レベル 1</span>
+            <span class="level-name">がめんを おおきくしよう (かんたん)</span>
+          </button>
+          <!-- レベル2：つなげる -->
+          <button class="btn level-btn level-btn-2" onclick="startBlockGame(2)">
+            <span class="level-num">レベル 2</span>
+            <span class="level-name">ブロックをつなげよう (ふつう)</span>
+          </button>
+          <!-- レベル3：消去 -->
+          <button class="btn level-btn level-btn-3" onclick="startBlockGame(3)">
+            <span class="level-num">レベル 3</span>
+            <span class="level-name">ブロックをけしてみよう (むずかしい)</span>
           </button>
         </div>
       </div>
@@ -1124,6 +1402,189 @@
     </div>
 
     <!-- ==========================================================================
+         SCREEN: BLOCK PRACTICE (Scratch-like Blocks)
+         ========================================================================== -->
+    <div id="screen-block" class="screen">
+      <div class="game-header">
+        <button class="btn btn-back" onclick="backToMenu()">◀ メニュー</button>
+        <div class="game-title-text" id="block-game-title">ブロックプログラミング</div>
+        <div class="score-board">
+          <span id="block-score-label">できた数:</span>
+          <span id="block-score">0 / 3</span>
+        </div>
+      </div>
+      
+      <div id="block-game-area">
+        <!-- レベル3用ドラッグガイド矢印 (点線曲線) -->
+        <svg id="block-drag-arrow" viewBox="0 0 1024 500" style="position: absolute; top: 120px; left: 0; width: 1024px; height: 500px; pointer-events: none; z-index: 50; display: none;">
+          <path d="M 450 250 Q 280 40, 110 180" fill="none" stroke="#fa5252" stroke-width="4.5" stroke-linecap="round" stroke-dasharray="8 6" marker-end="url(#arrow)" class="drag-guide-arrow" />
+          <defs>
+            <marker id="arrow" viewBox="0 0 10 10" refX="6" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+              <path d="M 0 1.5 L 8 5 L 0 8.5 z" fill="#fa5252" />
+            </marker>
+          </defs>
+        </svg>
+
+        <!-- 左側：パレットエリア -->
+        <div class="block-palette" id="block-palette-area">
+          <div class="palette-title" id="block-palette-title">おなじ色のブロックをつなげよう！</div>
+          <div class="palette-container" id="block-palette-container">
+            <!-- JavaScriptでここにドラッグ用ブロックが生成される -->
+          </div>
+        </div>
+        
+        <!-- 右側：組み立てエリア -->
+        <div class="block-workspace" id="block-workspace-area">
+          <div id="block-workspace-zoom-wrapper" style="width: 100%; height: 100%; position: relative; transition: transform 0.1s ease; transform-origin: 20% 20%;">
+            
+            <!-- パート1：ハットブロック（黄色） -->
+            <div class="forever-block" id="forever-block-target-1" style="left: 60px; top: 120px; width: 190px; height: 110px;">
+              <svg width="190" height="110" viewBox="0 0 190 110" class="block-svg">
+                <!-- ハットブロック（ひまわりイエロー） -->
+                <path d="M 10 30 
+                         C 10 10, 80 10, 80 30 
+                         L 170 30 
+                         A 10 10 0 0 1 180 40 
+                         L 180 50 
+                         A 10 10 0 0 1 170 60 
+                         L 45 60 
+                         Q 38 68, 30 60 
+                         L 20 60 
+                         A 10 10 0 0 1 10 50 
+                         Z" 
+                      fill="#ffe600" stroke="#cca700" stroke-width="4" />
+                <!-- ガイド点線枠（ひまわりイエロー、オフセット x:0, y:+50） -->
+                <path class="guide-path" d="M 20 60 
+                         L 30 60 
+                         Q 38 68, 45 60 
+                         L 150 60 
+                         A 10 10 0 0 1 160 70 
+                         L 160 100 
+                         A 10 10 0 0 1 150 110 
+                         L 45 110 
+                         Q 38 118, 30 110 
+                         L 20 110 
+                         A 10 10 0 0 1 10 100 
+                         L 10 70 
+                         A 10 10 0 0 1 20 60 
+                         Z" 
+                      fill="none" stroke="#ffe600" stroke-width="3" stroke-dasharray="6 4" opacity="0.6" />
+              </svg>
+            </div>
+            
+            <!-- パート2：ずっとブロック（みかんオレンジ） -->
+            <div class="forever-block" id="forever-block-target-2" style="left: 360px; top: 90px; width: 220px; height: 165px;">
+              <svg width="220" height="165" viewBox="0 0 220 165" class="block-svg">
+                <!-- ずっとブロック本体（みかんオレンジ） -->
+                <path d="M 20 10 
+                         L 30 10 
+                         Q 38 18, 45 10 
+                         L 190 10 
+                         A 10 10 0 0 1 200 20 
+                         L 200 50 
+                         A 10 10 0 0 1 190 60 
+                         L 75 60 
+                         Q 67 68, 60 60 
+                         L 45 60 
+                         A 5 5 0 0 0 40 65 
+                         L 40 105 
+                         A 5 5 0 0 0 45 110 
+                         L 60 110 
+                         Q 67 118, 75 110 
+                         L 190 110 
+                         A 10 10 0 0 1 200 120 
+                         L 200 155 
+                         A 10 10 0 0 1 190 165 
+                         L 20 165 
+                         A 10 10 0 0 1 10 155 
+                         L 10 20 
+                         A 10 10 0 0 1 20 10 
+                         Z" 
+                      fill="#ff7700" stroke="#cc5f00" stroke-width="4" />
+                <!-- ガイド点線枠（みかんオレンジ、オフセット x:+30, y:+50） -->
+                <path class="guide-path" d="M 50 60 
+                         L 60 60 
+                         Q 68 68, 75 60 
+                         L 180 60 
+                         A 10 10 0 0 1 190 70 
+                         L 190 100 
+                         A 10 10 0 0 1 180 110 
+                         L 75 110
+                         Q 68 118, 60 110
+                         L 50 110
+                         A 10 10 0 0 1 40 100 
+                         L 40 70
+                         A 10 10 0 0 1 50 60 
+                         Z" 
+                      fill="none" stroke="#ff7700" stroke-width="3" stroke-dasharray="6 4" opacity="0.6" />
+              </svg>
+            </div>
+            
+            <!-- パート3：まで待つブロック（鮮やかな緑） -->
+            <div class="forever-block" id="forever-block-target-3" style="left: 160px; top: 380px; width: 320px; height: 60px;">
+              <svg width="320" height="60" viewBox="0 0 320 60" class="block-svg">
+                <!-- まで待つブロック本体（鮮やかな緑） -->
+                <path d="M 20 10 
+                         L 30 10 
+                         Q 38 18, 45 10 
+                         L 300 10 
+                         A 10 10 0 0 1 310 20 
+                         L 310 40 
+                         A 10 10 0 0 1 300 50 
+                         L 45 50 
+                         Q 38 58, 30 50 
+                         L 20 50 
+                         A 10 10 0 0 1 10 40 
+                         L 10 20 
+                         A 10 10 0 0 1 20 10 
+                         Z" 
+                      fill="#33cc33" stroke="#229922" stroke-width="4" />
+                <!-- 暗い緑の六角形くぼみ (幅140px, 高さ36px, 相対 x:75, y:12) -->
+                <path d="M 75 30 
+                         L 90 12 
+                         L 200 12 
+                         L 215 30 
+                         L 200 48 
+                         L 90 48 
+                         Z" 
+                      fill="#1f7d1f" opacity="0.35" />
+                <!-- 六角形の緑の点線ガイド -->
+                <path class="guide-path" d="M 75 30 
+                         L 90 12 
+                         L 200 12 
+                         L 215 30 
+                         L 200 48 
+                         L 90 48 
+                         Z" 
+                      fill="none" stroke="#33cc33" stroke-width="3" stroke-dasharray="4 3" />
+              </svg>
+            </div>
+          </div>
+          
+          <!-- ズームコントロール -->
+          <div class="zoom-controls" id="block-zoom-controls" style="display: none;">
+            <button class="zoom-btn" id="zoom-in-btn" onclick="zoomBlockWorkspace(true)">
+              <svg viewBox="0 0 24 24" width="28" height="28">
+                <circle cx="10" cy="10" r="7" fill="none" stroke="currentColor" stroke-width="2.5"/>
+                <line x1="21" y1="21" x2="15" y2="15" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"/>
+                <line x1="10" y1="7" x2="10" y2="13" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"/>
+                <line x1="7" y1="10" x2="13" y2="10" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"/>
+              </svg>
+            </button>
+            <button class="zoom-btn" id="zoom-out-btn" onclick="zoomBlockWorkspace(false)">
+              <svg viewBox="0 0 24 24" width="28" height="28">
+                <circle cx="10" cy="10" r="7" fill="none" stroke="currentColor" stroke-width="2.5"/>
+                <line x1="21" y1="21" x2="15" y2="15" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"/>
+                <line x1="7" y1="10" x2="13" y2="10" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"/>
+              </svg>
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+    <!-- ==========================================================================
          SCREEN: CLEAR / RESULT
          ========================================================================== -->
     <div id="screen-clear" class="screen">
@@ -1146,6 +1607,10 @@
        JAVASCRIPT GAME CODE
        ========================================================================== -->
   <script>
+    window.onerror = function(message, source, lineno, colno, error) {
+      alert("JavaScriptエラーが発生しました！\nメッセージ: " + message + "\n場所: " + source + "\n行番号: " + lineno + "\n列番号: " + colno);
+      return false;
+    };
     /* ==========================================================================
        SOUND ENGINE (Web Audio API Synthesizer)
        ========================================================================== */
@@ -1452,6 +1917,19 @@
         currentY: 0,
         successCount: 0,
         maxScore: 6
+      },
+      
+      block: {
+        level: 1,
+        zoomClicks: 0,
+        zoomFactor: 1.0,
+        successCount: 0,
+        maxScore: 3,
+        parts: {
+          1: { id: 1, targetX: 340, targetY: 170, homeX: 55, homeY: 110, snapped: false },
+          2: { id: 2, targetX: 670, targetY: 140, homeX: 55, homeY: 290, snapped: false },
+          3: { id: 3, targetX: 515, targetY: 392, homeX: 70, homeY: 497, snapped: false }
+        }
       }
     };
 
@@ -1488,6 +1966,12 @@
       showScreen('click-level');
     }
 
+    function showBlockLevelSelect() {
+      sound.playMenuClick();
+      cleanupActiveGame();
+      showScreen('block-level');
+    }
+
     function cleanupActiveGame() {
       clearInterval(state.click.bubbleInterval);
       state.click.bubbles.forEach(b => b.remove());
@@ -1496,6 +1980,16 @@
       document.querySelectorAll('.drag-item').forEach(item => item.remove());
       state.drag.items = [];
       state.drag.draggedItem = null;
+
+      document.querySelectorAll('.drag-block').forEach(item => item.remove());
+      document.querySelectorAll('.zoomable-block').forEach(item => item.remove());
+      state.block.item = null;
+
+      const palette = document.getElementById('block-palette-area');
+      if (palette) palette.classList.remove('palette-trash-active');
+
+      const zoomWrapper = document.getElementById('block-workspace-zoom-wrapper');
+      if (zoomWrapper) zoomWrapper.style.transform = 'scale(1.0)';
     }
 
     function startGame(gameType, level) {
@@ -1532,6 +2026,8 @@
         document.getElementById('drag-score').textContent = `0 / 6`;
         showScreen('drag');
         initDragGame();
+      } else if (gameType === 'block') {
+        startBlockGame(level || 2);
       }
     }
 
@@ -1539,6 +2035,8 @@
       sound.playMenuClick();
       if (state.activeGame === 'click') {
         startGame('click', state.click.level);
+      } else if (state.activeGame === 'block') {
+        startBlockGame(state.block.level);
       } else {
         startGame(state.activeGame);
       }
@@ -1548,6 +2046,19 @@
       cleanupActiveGame();
       document.getElementById('clear-message-text').innerHTML = message;
       sound.playClearFanfare();
+
+      const replayBtn = document.getElementById('btn-replay');
+      if (replayBtn) {
+        if (state.activeGame === 'block' && state.block.level < 3) {
+          const nextLevel = state.block.level + 1;
+          replayBtn.textContent = 'つぎの レベルへ';
+          replayBtn.setAttribute('onclick', `startBlockGame(${nextLevel})`);
+        } else {
+          replayBtn.textContent = 'もう１回 あそぶ';
+          replayBtn.setAttribute('onclick', 'replayGame()');
+        }
+      }
+
       showScreen('clear');
     }
 
@@ -2162,7 +2673,6 @@
       }, 400);
     }
 
-    // 画面サイズに合わせてゲーム画面を自動スケーリングする処理
     function handleResize() {
       const app = document.getElementById('app');
       if (!app) return;
@@ -2173,23 +2683,18 @@
       const windowWidth = window.innerWidth;
       const windowHeight = window.innerHeight;
       
-      // ウィンドウサイズに対するアスペクト比スケールを計算
       const scaleX = windowWidth / baseWidth;
       const scaleY = windowHeight / baseHeight;
       const scale = Math.min(scaleX, scaleY);
       
-      // PC大画面での過剰な拡大（ぼやけ）を防ぐため、最大スケールは 1 とする
       const finalScale = Math.min(scale, 1);
       
-      // 縮小後の実サイズを計算
       const scaledWidth = baseWidth * finalScale;
       const scaledHeight = baseHeight * finalScale;
       
-      // 画面の中央に配置するための left, top を計算
       const left = (windowWidth - scaledWidth) / 2;
       const top = (windowHeight - scaledHeight) / 2;
       
-      // スタイルを反映 (はみ出しによる左見切れバグを防ぐため、left/topをJSで動的配置)
       app.style.transform = `scale(${finalScale})`;
       app.style.left = `${left}px`;
       app.style.top = `${top}px`;
@@ -2199,7 +2704,6 @@
     window.addEventListener('DOMContentLoaded', handleResize);
     window.addEventListener('load', handleResize);
 
-    // 最初のクリック（または画面タップ）時にWeb Audio APIを有効化しBGMを開始
     window.addEventListener('mousedown', () => {
       if (sound.enabled) {
         sound.init();
@@ -2213,6 +2717,539 @@
         sound.startBGM();
       }
     }, { once: true });
+
+    /* ==========================================================================
+       GAME LOGIC: BLOCK PRACTICE
+       ========================================================================== */
+    const BLOCK_DRAG_SVGS = {
+      1: `
+        <svg width="100%" height="100%" viewBox="0 0 170 70" class="block-svg">
+          <path d="M 20 10 
+                   L 30 10 
+                   Q 38 18, 45 10 
+                   L 150 10 
+                   A 10 10 0 0 1 160 20 
+                   L 160 50 
+                   A 10 10 0 0 1 150 60 
+                   L 45 60
+                   Q 38 68, 30 60
+                   L 20 60
+                   A 10 10 0 0 1 10 50 
+                   L 10 20
+                   A 10 10 0 0 1 20 10
+                   Z" 
+                fill="#ffe600" stroke="#cca700" stroke-width="4" />
+        </svg>
+      `,
+      2: `
+        <svg width="100%" height="100%" viewBox="0 0 170 70" class="block-svg">
+          <path d="M 20 10 
+                   L 30 10 
+                   Q 38 18, 45 10 
+                   L 150 10 
+                   A 10 10 0 0 1 160 20 
+                   L 160 50 
+                   A 10 10 0 0 1 150 60 
+                   L 45 60
+                   Q 38 68, 30 60
+                   L 20 60
+                   A 10 10 0 0 1 10 50 
+                   L 10 20
+                   A 10 10 0 0 1 20 10
+                   Z" 
+                fill="#ff7700" stroke="#cc5f00" stroke-width="4" />
+        </svg>
+      `,
+      3: `
+        <svg width="100%" height="100%" viewBox="0 0 140 36" class="block-svg">
+          <path d="M 0 18 
+                   L 15 0 
+                   L 125 0 
+                   L 140 18 
+                   L 125 36 
+                   L 15 36 
+                   Z" 
+                fill="#33cc33" stroke="#229922" stroke-width="3" />
+        </svg>
+      `
+    };
+
+    function startBlockGame(level) {
+      state.activeGame = 'block';
+      state.block.level = level;
+      state.block.zoomClicks = 0;
+      state.block.zoomFactor = 1.0;
+      state.block.successCount = 0;
+      
+      cleanupActiveGame();
+      
+      const gameTitle = document.getElementById('block-game-title');
+      const paletteTitle = document.getElementById('block-palette-title');
+      const scoreLabel = document.getElementById('block-score-label');
+      const scoreValue = document.getElementById('block-score');
+      
+      // レベルごとのUI切り替え
+      const t1 = document.getElementById('forever-block-target-1');
+      const t2 = document.getElementById('forever-block-target-2');
+      const t3 = document.getElementById('forever-block-target-3');
+      const zc = document.getElementById('block-zoom-controls');
+
+      if (level === 1) {
+        if (gameTitle) gameTitle.textContent = "がめんをかくだいする";
+        if (paletteTitle) paletteTitle.textContent = "かくだいボタン（＋）を 3回 おしてみよう！";
+        if (scoreLabel) scoreLabel.textContent = "かくだいしたかず:";
+        if (scoreValue) scoreValue.textContent = "0 / 3";
+        
+        // ターゲットブロックを隠す
+        if (t1) t1.style.display = 'none';
+        if (t2) t2.style.display = 'none';
+        if (t3) t3.style.display = 'none';
+        
+        // ズームコントロールを表示
+        if (zc) zc.style.display = 'flex';
+      } else if (level === 2) {
+        if (gameTitle) gameTitle.textContent = "ブロックをつなげる";
+        if (paletteTitle) paletteTitle.textContent = "おなじ色のブロックをつなげよう！";
+        if (scoreLabel) scoreLabel.textContent = "できたかず:";
+        if (scoreValue) scoreValue.textContent = "0 / 3";
+        
+        // ターゲットブロックを表示
+        if (t1) t1.style.display = 'block';
+        if (t2) t2.style.display = 'block';
+        if (t3) t3.style.display = 'block';
+        
+        // ズームコントロールを隠す
+        if (zc) zc.style.display = 'none';
+      } else if (level === 3) {
+        if (gameTitle) gameTitle.textContent = "ブロックをけす";
+        if (paletteTitle) paletteTitle.textContent = "ブロックを 左にもどして けそう！";
+        if (scoreLabel) scoreLabel.textContent = "けしたかず:";
+        if (scoreValue) scoreValue.textContent = "0 / 1";
+        
+        // ターゲットブロックを隠す
+        if (t1) t1.style.display = 'none';
+        if (t2) t2.style.display = 'none';
+        if (t3) t3.style.display = 'none';
+        
+        // ズームコントロールを隠す
+        if (zc) zc.style.display = 'none';
+      }
+      
+      // ズームインボタンのハイライト切り替え
+      const zoomInBtn = document.getElementById('zoom-in-btn');
+      if (zoomInBtn) {
+        if (level === 1) {
+          zoomInBtn.classList.add('zoom-btn-highlight');
+        } else {
+          zoomInBtn.classList.remove('zoom-btn-highlight');
+        }
+      }
+
+      // レベル3のドラッグガイド矢印の表示切り替え
+      const dragArrow = document.getElementById('block-drag-arrow');
+      if (dragArrow) {
+        if (level === 3) {
+          dragArrow.style.display = 'block';
+        } else {
+          dragArrow.style.display = 'none';
+        }
+      }
+      
+      showScreen('block');
+      initBlockGame();
+    }
+
+    function initBlockGame() {
+      // 既存のドラッグブロックを削除
+      document.querySelectorAll('#block-game-area .drag-block').forEach(b => b.remove());
+      document.querySelectorAll('.zoomable-block').forEach(b => b.remove());
+      
+      // クラスリセット
+      for (let i = 1; i <= 3; i++) {
+        const target = document.getElementById(`forever-block-target-${i}`);
+        if (target) {
+          target.classList.remove('hovered', 'bounce');
+        }
+      }
+
+      if (state.block.level === 1) {
+        // レベル1: がおされたときブロックをワークスペースに1個配置
+        createLevel1StaticBlock();
+      } else if (state.block.level === 2) {
+        // レベル2: 3つのブロックをつなげる
+        for (let p in state.block.parts) {
+          state.block.parts[p].snapped = false;
+        }
+        createBlockItem(1);
+        createBlockItem(2);
+        createBlockItem(3);
+      } else if (state.block.level === 3) {
+        // レベル3: ドラッグして消去するブロックを1個配置
+        createLevel3Block();
+      }
+    }
+
+    // レベル1：静的ズーム対象ブロックの配置 (デフォルトサイズを拡大、旗・文字を削除)
+    function createLevel1StaticBlock() {
+      const wrapper = document.getElementById('block-workspace-zoom-wrapper');
+      if (!wrapper) return;
+      const item = document.createElement('div');
+      item.className = 'zoomable-block';
+      item.id = 'zoom-target-block';
+      
+      // 滑らかに変化するように CSS トランジションを設定
+      item.style.transition = 'all 0.25s cubic-bezier(0.175, 0.885, 0.32, 1.275)';
+      item.style.width = '250px';
+      item.style.height = '92px';
+      item.style.left = '190px';
+      item.style.top = '140px';
+      
+      // が おされたとき ハットブロック (旗・文字なし)
+      item.innerHTML = `
+        <svg width="100%" height="100%" viewBox="0 0 195 72" class="block-svg" style="overflow: visible;">
+          <path d="M 10 30 C 10 10, 80 10, 80 30 L 180 30 A 10 10 0 0 1 190 40 L 190 50 A 10 10 0 0 1 180 60 L 45 60 Q 38 68, 30 60 L 20 60 A 10 10 0 0 1 10 50 Z" fill="#ffe600" stroke="#cca700" stroke-width="4" />
+        </svg>
+      `;
+      wrapper.appendChild(item);
+    }
+
+    // レベル1：疑似拡大・縮小 (拡大率アップ、サイズテーブル変更)
+    function zoomBlockWorkspace(isZoomIn) {
+      if (state.block.level !== 1) return;
+      
+      const targetBlock = document.getElementById('zoom-target-block');
+      if (!targetBlock) return;
+
+      sound.playClick(1.2);
+      
+      if (isZoomIn) {
+        if (state.block.zoomClicks < 3) {
+          state.block.zoomClicks++;
+        }
+      } else {
+        if (state.block.zoomClicks > 0) {
+          state.block.zoomClicks--;
+        }
+      }
+      
+      // 疑似的なサイズ変更（width, height）と中央付近を保つ位置（left, top）のテーブル
+      const sizes = [
+        { w: 250, h: 92, l: 190, t: 140 },
+        { w: 340, h: 125, l: 145, t: 120 },
+        { w: 430, h: 158, l: 100, t: 100 },
+        { w: 520, h: 191, l: 55, t: 80 }
+      ];
+      
+      const current = sizes[state.block.zoomClicks];
+      targetBlock.style.width = `${current.w}px`;
+      targetBlock.style.height = `${current.h}px`;
+      targetBlock.style.left = `${current.l}px`;
+      targetBlock.style.top = `${current.t}px`;
+      
+      document.getElementById('block-score').textContent = `${state.block.zoomClicks} / 3`;
+      
+      if (state.block.zoomClicks === 3) {
+        setTimeout(() => {
+          sound.playSuccess();
+          const zoomInBtn = document.getElementById('zoom-in-btn');
+          if (zoomInBtn) zoomInBtn.classList.remove('zoom-btn-highlight');
+          startBlockGame(2);
+        }, 1000);
+      }
+    }
+
+    // レベル3：ドラッグ＆消去ブロック (デフォルトサイズを拡大、旗・文字を削除、位置を矢印始点近くに調整)
+    function createLevel3Block() {
+      const wrapper = document.getElementById('block-workspace-zoom-wrapper');
+      const item = document.createElement('div');
+      item.className = 'drag-block';
+      item.id = 'trash-block-item';
+      item.style.width = '250px';
+      item.style.height = '92px';
+      item.style.left = '170px';
+      item.style.top = '250px';
+      
+      // が おされたとき ハットブロック (旗・文字なし)
+      item.innerHTML = `
+        <svg width="100%" height="100%" viewBox="0 0 195 72" class="block-svg" style="overflow: visible;">
+          <path d="M 10 30 C 10 10, 80 10, 80 30 L 180 30 A 10 10 0 0 1 190 40 L 190 50 A 10 10 0 0 1 180 60 L 45 60 Q 38 68, 30 60 L 20 60 A 10 10 0 0 1 10 50 Z" fill="#ffe600" stroke="#cca700" stroke-width="4" />
+        </svg>
+      `;
+      
+      wrapper.appendChild(item);
+      
+      let isDragging = false;
+      let offsetLeft = 0;
+      let offsetTop = 0;
+      
+      item.addEventListener('pointerdown', (e) => {
+        e.preventDefault();
+        isDragging = true;
+        item.setPointerCapture(e.pointerId);
+        sound.playGrab();
+        
+        // ドラッグガイド矢印を消す
+        const dragArrow = document.getElementById('block-drag-arrow');
+        if (dragArrow) dragArrow.style.display = 'none';
+
+        // 左側エリアをハイライト (ヒント表示)
+        const palette = document.getElementById('block-palette-area');
+        if (palette) palette.classList.add('palette-trash-hint');
+        
+        const rect = item.getBoundingClientRect();
+        const wrapperRect = wrapper.getBoundingClientRect();
+        const scale = wrapperRect.width / wrapper.clientWidth;
+        
+        offsetLeft = (e.clientX - rect.left) / scale;
+        offsetTop = (e.clientY - rect.top) / scale;
+        item.style.zIndex = 1000;
+      });
+      
+      item.addEventListener('pointermove', (e) => {
+        if (!isDragging) return;
+        
+        const wrapperRect = wrapper.getBoundingClientRect();
+        const scale = wrapperRect.width / wrapper.clientWidth;
+        
+        const currentX = (e.clientX - wrapperRect.left) / scale - offsetLeft;
+        const currentY = (e.clientY - wrapperRect.top) / scale - offsetTop;
+        
+        // パレット（左側：-280px付近）までドラッグできるように最小値を-260に変更
+        const boundedX = Math.max(-260, Math.min(wrapper.clientWidth - 250, currentX));
+        const boundedY = Math.max(10, Math.min(wrapper.clientHeight - 92, currentY));
+        
+        item.style.left = `${boundedX}px`;
+        item.style.top = `${boundedY}px`;
+        
+        // ゴミ箱（左側パレット）への重なり検知
+        const palette = document.getElementById('block-palette-area');
+        const itemRect = item.getBoundingClientRect();
+        const paletteRect = palette.getBoundingClientRect();
+        
+        if (isOverlapping(itemRect, paletteRect)) {
+          palette.classList.add('palette-trash-active');
+        } else {
+          palette.classList.remove('palette-trash-active');
+        }
+      });
+      
+      item.addEventListener('pointerup', (e) => {
+        if (!isDragging) return;
+        isDragging = false;
+        item.releasePointerCapture(e.pointerId);
+        item.style.zIndex = 100;
+        
+        // 左側のヒントハイライトを削除
+        const palette = document.getElementById('block-palette-area');
+        if (palette) {
+          palette.classList.remove('palette-trash-hint');
+          palette.classList.remove('palette-trash-active');
+        }
+        
+        const itemRect = item.getBoundingClientRect();
+        const paletteRect = palette.getBoundingClientRect();
+        
+        if (isOverlapping(itemRect, paletteRect)) {
+          // ゴミ箱に投下成功
+          sound.playSuccess();
+          
+          item.classList.add('block-fade-out');
+          document.getElementById('block-score').textContent = '1 / 1';
+          
+          setTimeout(() => {
+            item.remove();
+            triggerClearScreen("ブロックを パレットのなかに かたづけられました！<br>ブロックを けすのも ばっちりできるようになったね！");
+          }, 600);
+        } else {
+          // 元の場所に戻る
+          sound.playFail();
+          item.style.transition = 'all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275)';
+          item.style.left = '170px';
+          item.style.top = '250px';
+          setTimeout(() => {
+            item.style.transition = '';
+            // ドラッグガイド矢印を再表示
+            const dragArrow = document.getElementById('block-drag-arrow');
+            if (dragArrow && state.block.level === 3) dragArrow.style.display = 'block';
+          }, 300);
+        }
+      });
+    }
+
+    // レベル2：ドラッグブロックの生成
+    function createBlockItem(partId) {
+      const area = document.getElementById('block-game-area');
+      const item = document.createElement('div');
+      item.className = 'drag-block';
+      item.id = `command-block-item-${partId}`;
+      
+      const partConfig = state.block.parts[partId];
+      
+      if (partId === 3) {
+        item.style.width = '140px';
+        item.style.height = '36px';
+      } else {
+        item.style.width = '170px';
+        item.style.height = '70px';
+      }
+      
+      item.innerHTML = BLOCK_DRAG_SVGS[partId];
+
+      const x = partConfig.homeX;
+      const y = partConfig.homeY;
+      
+      item.style.left = `${x}px`;
+      item.style.top = `${y}px`;
+      
+      area.appendChild(item);
+
+      let isDragging = false;
+      let offsetLeft = 0;
+      let offsetTop = 0;
+
+      item.addEventListener('pointerdown', (e) => {
+        if (state.block.parts[partId].snapped) return;
+        e.preventDefault();
+        isDragging = true;
+        item.setPointerCapture(e.pointerId);
+        sound.playGrab();
+
+        const target = document.getElementById(`forever-block-target-${partId}`);
+        if (target) target.classList.add('highlight-active');
+
+        const rect = item.getBoundingClientRect();
+        const areaRect = area.getBoundingClientRect();
+        const scale = areaRect.width / area.clientWidth;
+        
+        offsetLeft = (e.clientX - rect.left) / scale;
+        offsetTop = (e.clientY - rect.top) / scale;
+        
+        item.style.zIndex = 1000;
+      });
+
+      item.addEventListener('pointermove', (e) => {
+        if (!isDragging) return;
+        
+        const areaRect = area.getBoundingClientRect();
+        const scale = areaRect.width / area.clientWidth;
+        
+        const currentX = (e.clientX - areaRect.left) / scale - offsetLeft;
+        const currentY = (e.clientY - areaRect.top) / scale - offsetTop;
+        
+        const boundedX = Math.max(10, Math.min(area.clientWidth - (partId === 3 ? 140 : 170), currentX));
+        const boundedY = Math.max(10, Math.min(area.clientHeight - (partId === 3 ? 36 : 70), currentY));
+        
+        item.style.left = `${boundedX}px`;
+        item.style.top = `${boundedY}px`;
+
+        checkBlockOverlap(item, partId);
+      });
+
+      item.addEventListener('pointerup', (e) => {
+        if (!isDragging) return;
+        isDragging = false;
+        item.releasePointerCapture(e.pointerId);
+        
+        const target = document.getElementById(`forever-block-target-${partId}`);
+        if (target) target.classList.remove('highlight-active');
+
+        item.style.zIndex = 100;
+        checkBlockDrop(item, partId);
+      });
+    }
+
+    function checkBlockOverlap(item, partId) {
+      const itemRect = item.getBoundingClientRect();
+      const target = document.getElementById(`forever-block-target-${partId}`);
+      if (!target) return;
+      
+      const area = document.getElementById('block-game-area');
+      const areaRect = area.getBoundingClientRect();
+      const scale = areaRect.width / area.clientWidth;
+      
+      const itemX = (itemRect.left - areaRect.left) / scale;
+      const itemY = (itemRect.top - areaRect.top) / scale;
+      
+      const partConfig = state.block.parts[partId];
+      
+      const dist = Math.hypot(itemX - partConfig.targetX, itemY - partConfig.targetY);
+      
+      if (dist < 40) {
+        target.classList.add('hovered');
+      } else {
+        target.classList.remove('hovered');
+      }
+    }
+
+    function checkBlockDrop(item, partId) {
+      const target = document.getElementById(`forever-block-target-${partId}`);
+      if (target) target.classList.remove('hovered');
+      
+      const area = document.getElementById('block-game-area');
+      const areaRect = area.getBoundingClientRect();
+      const scale = areaRect.width / area.clientWidth;
+      
+      const itemRect = item.getBoundingClientRect();
+      const itemX = (itemRect.left - areaRect.left) / scale;
+      const itemY = (itemRect.top - areaRect.top) / scale;
+      
+      const partConfig = state.block.parts[partId];
+      
+      const dist = Math.hypot(itemX - partConfig.targetX, itemY - partConfig.targetY);
+      
+      if (dist < 40) {
+        successBlockDrop(item, target, partId);
+      } else {
+        sound.playFail();
+        goBlockHome(item, partId);
+      }
+    }
+
+    function goBlockHome(item, partId) {
+      const partConfig = state.block.parts[partId];
+      
+      item.style.transition = 'all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275)';
+      item.style.left = `${partConfig.homeX}px`;
+      item.style.top = `${partConfig.homeY}px`;
+      
+      setTimeout(() => {
+        item.style.transition = '';
+      }, 300);
+    }
+
+    function successBlockDrop(item, target, partId) {
+      sound.playSuccess();
+      
+      if (target) {
+        target.classList.remove('bounce');
+        void target.offsetWidth;
+        target.classList.add('bounce');
+        setTimeout(() => target.classList.remove('bounce'), 500);
+      }
+
+      const partConfig = state.block.parts[partId];
+
+      item.style.transition = 'all 0.2s ease-out';
+      item.style.left = `${partConfig.targetX}px`;
+      item.style.top = `${partConfig.targetY}px`;
+      item.style.pointerEvents = 'none';
+
+      state.block.parts[partId].snapped = true;
+      
+      let completed = 0;
+      for (let p in state.block.parts) {
+        if (state.block.parts[p].snapped) completed++;
+      }
+      state.block.successCount = completed;
+      document.getElementById('block-score').textContent = `${completed} / 3`;
+
+      if (completed === 3) {
+        setTimeout(() => {
+          sound.playSuccess();
+          startBlockGame(3);
+        }, 1200);
+      }
+    }
   </script>
 </body>
 </html>
