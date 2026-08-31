@@ -614,6 +614,21 @@ body {
   font-size: clamp(1.5rem, 3.5vw, 2.2rem);
 }
 
+.kana-prompt.xlong {
+  font-size: clamp(1.2rem, 2.8vw, 1.8rem);
+  letter-spacing: 1px;
+}
+
+.roman-prompt.long {
+  font-size: clamp(1.4rem, 2.8vw, 2.4rem);
+  min-height: 3.5rem;
+}
+
+.roman-prompt.xlong {
+  font-size: clamp(1.15rem, 2.2vw, 1.9rem);
+  min-height: 3rem;
+}
+
 .kana-prompt span {
   transition: color 0.2s ease;
 }
@@ -1275,7 +1290,7 @@ body {
         </div>
         <div class="game-stats">
           <div class="stat-card">
-            <span class="stat-label">のこり時間</span>
+            <span class="stat-label" id="timeLabel">のこり時間</span>
             <span class="stat-val" id="timeValue">60秒</span>
           </div>
           <div class="stat-card">
@@ -4071,6 +4086,7 @@ const els = {
   // Play
   playStageLabel: document.getElementById('playStageLabel'),
   timeValue: document.getElementById('timeValue'),
+  timeLabel: document.getElementById('timeLabel'),
   inputValue: document.getElementById('inputValue'),
   missValue: document.getElementById('missValue'),
   progressBar: document.getElementById('progressBar'),
@@ -4437,6 +4453,11 @@ function startCountdown() {
 
 function startGame(stage) {
   initGame(stage);
+  // タイム制以外は経過時間を数え上げる表示なので、ラベルを合わせる
+  if (els.timeLabel) {
+    els.timeLabel.textContent = stage.time ? 'のこり時間' : 'けいかじかん';
+  }
+  els.timeValue.textContent = stage.time ? `${stage.lim}秒` : '0秒';
   showScreen(els.playScreen);
   state.status = 'playing';
   state.startTime = Date.now();
@@ -4503,6 +4524,13 @@ function updatePlayUI(displayRest, altHint) {
     
     const rest = displayRest !== undefined ? displayRest : state.currentRomajiList[0];
     els.romanPrompt.innerHTML = `<span class="typed">${state.typedRomaji}</span><span class="rest">${rest}</span>`;
+    
+    // お題の長さに合わせて表示サイズを落とす（長文が折り返して画面からあふれるのを防ぐ）
+    const romajiLen = state.typedRomaji.length + rest.length;
+    els.kanaPrompt.classList.toggle('long', kana.length >= 12 && kana.length < 20);
+    els.kanaPrompt.classList.toggle('xlong', kana.length >= 20);
+    els.romanPrompt.classList.toggle('long', romajiLen >= 18 && romajiLen < 30);
+    els.romanPrompt.classList.toggle('xlong', romajiLen >= 30);
     
     if (altHint) {
       els.altHint.textContent = altHint;
